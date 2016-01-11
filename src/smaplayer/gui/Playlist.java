@@ -5,12 +5,20 @@
  */
 package smaplayer.gui;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
+import javax.swing.JList;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import smaplayer.FileUtils;
+import smaplayer.Mp3;
+import smaplayer.PlayerFileFilter;
 import smaplayer.SmaPlayer;
 
 /**
@@ -18,6 +26,10 @@ import smaplayer.SmaPlayer;
  * @author Nick
  */
 public class Playlist extends javax.swing.JFrame {
+    
+    private PlayerFileFilter openMP3 = new PlayerFileFilter(FileUtils.MP3_FILES_EXP, FileUtils.MP3_FILES_DESC);
+    private PlayerFileFilter openPLS = new PlayerFileFilter(FileUtils.PLS_FILES_EXP, FileUtils.PLS_FILES_DESC);
+    private DefaultListModel myListModel = new DefaultListModel();
 
     /**
      * Creates new form Playlist
@@ -42,6 +54,18 @@ public class Playlist extends javax.swing.JFrame {
         
         SwingUtilities.updateComponentTreeUI(this);
     }
+    public void setListModel(Mp3 mp3){
+        myListModel.addElement(mp3);
+    }
+    public void setListModel(DefaultListModel model){
+        myListModel = model;
+    }
+    public DefaultListModel getListModel(){
+        return myListModel;
+    }
+    public JList getList(){
+        return jPlayList;
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -52,15 +76,20 @@ public class Playlist extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jOpenFile = new javax.swing.JFileChooser();
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jList1 = new javax.swing.JList<>();
-        jPanel3 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        jPLContainer = new javax.swing.JScrollPane();
+        jPlayList = new javax.swing.JList<>();
+        jMenuPanel = new javax.swing.JPanel();
+        btnAddMp3 = new javax.swing.JButton();
+        btnAddPlayList = new javax.swing.JButton();
+        btnDell = new javax.swing.JButton();
+        btnClear = new javax.swing.JButton();
+
+        jOpenFile.setAcceptAllFileFilterUsed(false);
+        jOpenFile.setCurrentDirectory(new java.io.File("C:\\Users\\koropenkods\\Downloads"));
+        jOpenFile.setMultiSelectionEnabled(true);
 
         setTitle("Playlist");
         setIconImage(new ImageIcon("src/smaplayer/images/mainIcon.png").getImage());
@@ -69,47 +98,59 @@ public class Playlist extends javax.swing.JFrame {
 
         jPanel1.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
 
-        jList1.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
+        jPlayList.setModel(myListModel);
+        jPlayList.setSelectedIndex(1);
+        jPLContainer.setViewportView(jPlayList);
+
+        jMenuPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        btnAddMp3.setText("Add");
+        btnAddMp3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddMp3ActionPerformed(evt);
+            }
         });
-        jScrollPane1.setViewportView(jList1);
 
-        jPanel3.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        btnAddPlayList.setText("PlayList");
 
-        jButton1.setText("Add");
+        btnDell.setText("Del");
+        btnDell.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDellActionPerformed(evt);
+            }
+        });
 
-        jButton2.setText("Del");
+        btnClear.setText("Clear");
+        btnClear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnClearActionPerformed(evt);
+            }
+        });
 
-        jButton3.setText("All");
-
-        jButton4.setText("Clear");
-
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
+        javax.swing.GroupLayout jMenuPanelLayout = new javax.swing.GroupLayout(jMenuPanel);
+        jMenuPanel.setLayout(jMenuPanelLayout);
+        jMenuPanelLayout.setHorizontalGroup(
+            jMenuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jMenuPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jButton1)
+                .addComponent(btnAddMp3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton2)
+                .addComponent(btnAddPlayList)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnDell)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton4)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(btnClear)
+                .addContainerGap())
         );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
+        jMenuPanelLayout.setVerticalGroup(
+            jMenuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jMenuPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2)
-                    .addComponent(jButton3)
-                    .addComponent(jButton4))
+                .addGroup(jMenuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnAddMp3)
+                    .addComponent(btnDell)
+                    .addComponent(btnClear)
+                    .addComponent(btnAddPlayList))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -117,15 +158,15 @@ public class Playlist extends javax.swing.JFrame {
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
+            .addComponent(jMenuPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPLContainer, javax.swing.GroupLayout.Alignment.TRAILING)
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 353, Short.MAX_VALUE)
+                .addComponent(jPLContainer, javax.swing.GroupLayout.DEFAULT_SIZE, 353, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jMenuPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -161,6 +202,54 @@ public class Playlist extends javax.swing.JFrame {
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnAddMp3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddMp3ActionPerformed
+        FileUtils.setFileFilter(jOpenFile, openMP3);        
+        int open = jOpenFile.showOpenDialog(this);
+        
+        int coin = 0;
+        Mp3 playlistSongName;
+        
+        
+        if (open == JFileChooser.APPROVE_OPTION){
+            File[] choosenFiles = jOpenFile.getSelectedFiles();
+            
+            for (File file: choosenFiles) {
+                Mp3 mp3 = new Mp3(file.getName(), file.getPath());
+                
+                for (int i = 0; i < myListModel.size(); i++) {
+                    playlistSongName = (Mp3) myListModel.getElementAt(i);
+                    if (mp3.getSongName().equals(playlistSongName.getSongName()))
+                        coin++;                    
+                }
+                
+                if(coin == 0)
+                    myListModel.addElement(mp3);
+                else
+                    coin = 0;
+            }
+        }
+        jPlayList.setSelectedIndex(0);
+    }//GEN-LAST:event_btnAddMp3ActionPerformed
+
+    private void btnDellActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDellActionPerformed
+        int[] selectedItems = jPlayList.getSelectedIndices();
+        
+        ArrayList<Mp3> selectedMp3 = new ArrayList();
+        
+        for (int i = 0; i < selectedItems.length; i++) {
+            Mp3 mp3 = (Mp3) myListModel.getElementAt(selectedItems[i]);
+            selectedMp3.add(mp3);
+        }
+        
+        for (Mp3 file: selectedMp3) {
+            myListModel.removeElement(file);
+        }
+    }//GEN-LAST:event_btnDellActionPerformed
+
+    private void btnClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearActionPerformed
+        myListModel.clear();
+    }//GEN-LAST:event_btnClearActionPerformed
 
     /**
      * @param args the command line arguments
@@ -198,14 +287,15 @@ public class Playlist extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JList<String> jList1;
+    private javax.swing.JButton btnAddMp3;
+    private javax.swing.JButton btnAddPlayList;
+    private javax.swing.JButton btnClear;
+    private javax.swing.JButton btnDell;
+    private javax.swing.JPanel jMenuPanel;
+    private javax.swing.JFileChooser jOpenFile;
+    private javax.swing.JScrollPane jPLContainer;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
-    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JList<String> jPlayList;
     // End of variables declaration//GEN-END:variables
 }

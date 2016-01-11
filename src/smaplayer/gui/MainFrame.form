@@ -2,6 +2,12 @@
 
 <Form version="1.5" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JFrameFormInfo">
   <NonVisualComponents>
+    <Component class="javax.swing.JFileChooser" name="jOpenFileDialog">
+      <Properties>
+        <Property name="acceptAllFileFilterUsed" type="boolean" value="false"/>
+        <Property name="multiSelectionEnabled" type="boolean" value="true"/>
+      </Properties>
+    </Component>
     <Menu class="javax.swing.JMenuBar" name="jMenuBar">
       <SubComponents>
         <Menu class="javax.swing.JMenu" name="jMenuFile">
@@ -11,25 +17,49 @@
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="jMenuOpenFile">
               <Properties>
+                <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
+                  <KeyStroke key="Ctrl+O"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="&#x41e;&#x442;&#x43a;&#x440;&#x44b;&#x442;&#x44c; &#x444;&#x430;&#x439;&#x43b;"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuOpenFileActionPerformed"/>
+              </Events>
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="jMenuOpenPlaylist">
               <Properties>
+                <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
+                  <KeyStroke key="Ctrl+P"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="&#x41e;&#x442;&#x43a;&#x440;&#x44b;&#x442;&#x44c; &#x43f;&#x43b;&#x435;&#x439;&#x43b;&#x438;&#x441;&#x442;"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuOpenPlaylistActionPerformed"/>
+              </Events>
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="jMenuSavePlayList">
               <Properties>
+                <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
+                  <KeyStroke key="Ctrl+S"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="&#x421;&#x43e;&#x445;&#x440;&#x430;&#x43d;&#x438;&#x442;&#x44c; &#x43f;&#x43b;&#x435;&#x439;&#x43b;&#x438;&#x441;&#x442;"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuSavePlayListActionPerformed"/>
+              </Events>
             </MenuItem>
             <MenuItem class="javax.swing.JPopupMenu$Separator" name="jSeparator1">
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="jMenuExit">
               <Properties>
+                <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
+                  <KeyStroke key="Ctrl+Q"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="&#x417;&#x430;&#x43a;&#x440;&#x44b;&#x442;&#x44c; &#x43f;&#x440;&#x43e;&#x433;&#x440;&#x430;&#x43c;&#x43c;&#x443;"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuExitActionPerformed"/>
+              </Events>
             </MenuItem>
           </SubComponents>
         </Menu>
@@ -100,15 +130,12 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="jPanel1" alignment="0" max="32767" attributes="0"/>
+          <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" alignment="0" attributes="0">
-              <Component id="jPanel1" min="-2" pref="165" max="-2" attributes="0"/>
-              <EmptySpace min="0" pref="2" max="32767" attributes="0"/>
-          </Group>
+          <Component id="jPanel1" min="-2" pref="132" max="-2" attributes="0"/>
       </Group>
     </DimensionLayout>
   </Layout>
@@ -125,22 +152,15 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" attributes="0">
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="pnlStatus" max="32767" attributes="0"/>
-                      <Component id="pnlButtons" alignment="1" max="32767" attributes="0"/>
-                  </Group>
-                  <EmptySpace max="-2" attributes="0"/>
-              </Group>
+              <Component id="pnlStatus" max="32767" attributes="0"/>
+              <Component id="pnlButtons" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
-                  <EmptySpace max="32767" attributes="0"/>
                   <Component id="pnlStatus" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
                   <Component id="pnlButtons" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="67" max="-2" attributes="0"/>
               </Group>
@@ -162,32 +182,24 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" attributes="0">
-                              <Component id="lbSongName" pref="86" max="32767" attributes="0"/>
-                              <EmptySpace min="-2" pref="374" max="-2" attributes="0"/>
-                          </Group>
-                          <Group type="102" attributes="0">
-                              <Component id="lbSongTime" min="-2" pref="182" max="-2" attributes="0"/>
-                              <EmptySpace min="216" max="32767" attributes="0"/>
-                          </Group>
-                          <Group type="102" attributes="0">
-                              <Component id="slSong" max="32767" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                          </Group>
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Component id="lbSongTime" alignment="0" min="-2" pref="182" max="-2" attributes="0"/>
+                          <Component id="lbSongName" alignment="0" max="32767" attributes="0"/>
+                          <Component id="slSong" alignment="0" pref="320" max="32767" attributes="0"/>
                       </Group>
+                      <EmptySpace max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="6" max="-2" attributes="0"/>
                       <Component id="lbSongName" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="lbSongTime" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="slSong" min="-2" max="-2" attributes="0"/>
+                      <Component id="slSong" min="-2" pref="14" max="-2" attributes="0"/>
                       <EmptySpace max="32767" attributes="0"/>
                   </Group>
               </Group>
@@ -226,39 +238,42 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="btnPrevSong" min="-2" max="-2" attributes="0"/>
+                      <Component id="btnPrevSong" min="-2" pref="35" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="btnPause" min="-2" max="-2" attributes="0"/>
+                      <Component id="btnPause" min="-2" pref="35" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="btnPlay" min="-2" max="-2" attributes="0"/>
+                      <Component id="btnPlay" min="-2" pref="35" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="btnNextSong" min="-2" max="-2" attributes="0"/>
+                      <Component id="btnNextSong" min="-2" pref="35" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="btnPlayList" min="-2" max="-2" attributes="0"/>
+                      <Component id="btnPlayList" min="-2" pref="35" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="btnVollume" min="-2" max="-2" attributes="0"/>
+                      <Component id="btnVollume" min="-2" pref="35" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="slVolume" pref="0" max="32767" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="slVolume" min="-2" pref="70" max="-2" attributes="0"/>
+                      <EmptySpace pref="14" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
+                  <Group type="102" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="slVolume" min="-2" max="-2" attributes="0"/>
-                          <Component id="btnVollume" min="-2" max="-2" attributes="0"/>
-                          <Component id="btnPlayList" min="-2" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="btnPrevSong" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="btnPause" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Component id="btnPlay" alignment="1" min="-2" max="-2" attributes="0"/>
-                              <Component id="btnNextSong" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="btnNextSong" alignment="1" max="32767" attributes="0"/>
+                          <Component id="btnPrevSong" alignment="1" max="32767" attributes="0"/>
+                          <Component id="btnPause" alignment="1" max="32767" attributes="0"/>
+                          <Component id="btnPlay" alignment="0" max="32767" attributes="0"/>
+                          <Group type="102" alignment="1" attributes="0">
+                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="btnPlayList" alignment="1" min="-2" pref="25" max="-2" attributes="0"/>
+                                  <Component id="btnVollume" alignment="1" min="-2" pref="25" max="-2" attributes="0"/>
+                                  <Component id="slVolume" alignment="1" min="-2" max="-2" attributes="0"/>
+                              </Group>
                           </Group>
                       </Group>
-                      <EmptySpace max="32767" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -271,6 +286,9 @@
                 </Property>
                 <Property name="toolTipText" type="java.lang.String" value="&#x41f;&#x440;&#x435;&#x434;&#x44b;&#x434;&#x443;&#x449;&#x430;&#x44f; &#x43f;&#x435;&#x441;&#x43d;&#x44f;"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnPrevSongActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JButton" name="btnPause">
               <Properties>
@@ -287,6 +305,9 @@
                 </Property>
                 <Property name="toolTipText" type="java.lang.String" value="&#x412;&#x43e;&#x441;&#x43f;&#x440;&#x43e;&#x438;&#x437;&#x432;&#x435;&#x441;&#x442;&#x438;"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnPlayActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JButton" name="btnNextSong">
               <Properties>
@@ -295,6 +316,9 @@
                 </Property>
                 <Property name="toolTipText" type="java.lang.String" value="&#x421;&#x43b;&#x435;&#x434;&#x443;&#x44e;&#x449;&#x430;&#x44f; &#x43f;&#x435;&#x441;&#x43d;&#x44f;"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnNextSongActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JButton" name="btnPlayList">
               <Properties>
