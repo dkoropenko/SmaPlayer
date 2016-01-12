@@ -5,6 +5,9 @@
  */
 package smaplayer.gui;
 
+import java.awt.Dimension;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -58,7 +61,15 @@ public class Playlist extends javax.swing.JFrame {
         myListModel.addElement(mp3);
     }
     public void setListModel(DefaultListModel model){
-        myListModel = model;
+        myListModel.clear();
+        
+        for (int i = 0; i < model.getSize(); i++) {
+            Mp3 mp3 = (Mp3) model.getElementAt(i);
+            
+            myListModel.addElement(mp3);
+        }
+        
+        jPlayList.setSelectedIndex(0);
     }
     public DefaultListModel getListModel(){
         return myListModel;
@@ -77,6 +88,11 @@ public class Playlist extends javax.swing.JFrame {
     private void initComponents() {
 
         jOpenFile = new javax.swing.JFileChooser();
+        jMouseMenu = new javax.swing.JPopupMenu();
+        jAddSong = new javax.swing.JMenuItem();
+        jDeleteSong = new javax.swing.JMenuItem();
+        jAddPlaylist = new javax.swing.JMenuItem();
+        jClear = new javax.swing.JMenuItem();
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         jPLContainer = new javax.swing.JScrollPane();
@@ -91,6 +107,18 @@ public class Playlist extends javax.swing.JFrame {
         jOpenFile.setCurrentDirectory(new java.io.File("C:\\Users\\koropenkods\\Downloads"));
         jOpenFile.setMultiSelectionEnabled(true);
 
+        jAddSong.setText("Добавить песню");
+        jMouseMenu.add(jAddSong);
+
+        jDeleteSong.setText("Удалить песню");
+        jMouseMenu.add(jDeleteSong);
+
+        jAddPlaylist.setText("Открыть плейлист");
+        jMouseMenu.add(jAddPlaylist);
+
+        jClear.setText("Очистить список");
+        jMouseMenu.add(jClear);
+
         setTitle("Playlist");
         setIconImage(new ImageIcon("src/smaplayer/images/mainIcon.png").getImage());
         setLocation(new java.awt.Point(8, 0));
@@ -100,6 +128,16 @@ public class Playlist extends javax.swing.JFrame {
 
         jPlayList.setModel(myListModel);
         jPlayList.setSelectedIndex(1);
+        jPlayList.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jPlayListMouseClicked(evt);
+            }
+        });
+        jPlayList.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jPlayListKeyPressed(evt);
+            }
+        });
         jPLContainer.setViewportView(jPlayList);
 
         jMenuPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -251,6 +289,23 @@ public class Playlist extends javax.swing.JFrame {
         myListModel.clear();
     }//GEN-LAST:event_btnClearActionPerformed
 
+    private void jPlayListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPlayListMouseClicked
+        if (SwingUtilities.isRightMouseButton(evt)){
+            jMouseMenu.show(jPlayList, evt.getX(), evt.getY());
+        }            
+    }//GEN-LAST:event_jPlayListMouseClicked
+
+    private void jPlayListKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jPlayListKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER){
+            int selectSong = jPlayList.getSelectedIndex();
+            
+            if (selectSong != -1){
+                Mp3 mp3 = (Mp3) myListModel.getElementAt(selectSong);
+            }
+        }
+            
+    }//GEN-LAST:event_jPlayListKeyPressed
+
     /**
      * @param args the command line arguments
      */
@@ -291,7 +346,12 @@ public class Playlist extends javax.swing.JFrame {
     private javax.swing.JButton btnAddPlayList;
     private javax.swing.JButton btnClear;
     private javax.swing.JButton btnDell;
+    private javax.swing.JMenuItem jAddPlaylist;
+    private javax.swing.JMenuItem jAddSong;
+    private javax.swing.JMenuItem jClear;
+    private javax.swing.JMenuItem jDeleteSong;
     private javax.swing.JPanel jMenuPanel;
+    private javax.swing.JPopupMenu jMouseMenu;
     private javax.swing.JFileChooser jOpenFile;
     private javax.swing.JScrollPane jPLContainer;
     private javax.swing.JPanel jPanel1;

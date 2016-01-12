@@ -5,23 +5,12 @@
  */
 package smaplayer;
 
-import java.io.Serializable;
-import smaplayer.gui.MainFrame;
-import smaplayer.gui.Playlist;
-
-/**
- *
- * @author Nick
- */
-public class SmaPlayer implements Serializable{
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {        
-        Playlist playlist = new Playlist();        
-        MainFrame window = new MainFrame(playlist);        
-        window.setVisible(true);
-    }
+public class SmaPlayer{
+    private String playedSongName;
+    private int volumeValue;
     
+    
+    public void play(String songName){
+        
+    }
 }

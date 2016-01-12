@@ -44,23 +44,10 @@ public class MainFrame extends javax.swing.JFrame {
         this.playlist = playlist;        
     }
     
-    private void changeSkin()
-    {
-        try {
-            UIManager.setLookAndFeel(this.skin);
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(SmaPlayer.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            Logger.getLogger(SmaPlayer.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            Logger.getLogger(SmaPlayer.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (UnsupportedLookAndFeelException ex) {
-            Logger.getLogger(SmaPlayer.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    public static void setPlayedSong(String songName){
         
-        SwingUtilities.updateComponentTreeUI(this);
     }
-
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -93,9 +80,6 @@ public class MainFrame extends javax.swing.JFrame {
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
         jMenuExit = new javax.swing.JMenuItem();
         jMenuEdit = new javax.swing.JMenu();
-        jMenuSkins = new javax.swing.JMenu();
-        jMenuSkin1 = new javax.swing.JMenuItem();
-        jMenuSkin2 = new javax.swing.JMenuItem();
 
         jOpenFileDialog.setAcceptAllFileFilterUsed(false);
         jOpenFileDialog.setMultiSelectionEnabled(true);
@@ -285,27 +269,6 @@ public class MainFrame extends javax.swing.JFrame {
         jMenuBar.add(jMenuFile);
 
         jMenuEdit.setText("Сервис");
-
-        jMenuSkins.setText("Внешний вид");
-
-        jMenuSkin1.setText("Nimbus");
-        jMenuSkin1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuSkin1ActionPerformed(evt);
-            }
-        });
-        jMenuSkins.add(jMenuSkin1);
-
-        jMenuSkin2.setText("Metall");
-        jMenuSkin2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuSkin2ActionPerformed(evt);
-            }
-        });
-        jMenuSkins.add(jMenuSkin2);
-
-        jMenuEdit.add(jMenuSkins);
-
         jMenuBar.add(jMenuEdit);
 
         setJMenuBar(jMenuBar);
@@ -330,18 +293,6 @@ public class MainFrame extends javax.swing.JFrame {
     private void OpenPlaylist(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OpenPlaylist
         playlist.setVisible(true);
     }//GEN-LAST:event_OpenPlaylist
-
-    private void jMenuSkin1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuSkin1ActionPerformed
-        skin = "javax.swing.plaf.nimbus.NimbusLookAndFeel";
-        playlist.changeSkin(skin);
-        this.changeSkin();
-    }//GEN-LAST:event_jMenuSkin1ActionPerformed
-
-    private void jMenuSkin2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuSkin2ActionPerformed
-        skin = "javax.swing.plaf.metal.MetalLookAndFeel";
-        playlist.changeSkin(skin);
-        this.changeSkin();
-    }//GEN-LAST:event_jMenuSkin2ActionPerformed
 
     private void jMenuOpenFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuOpenFileActionPerformed
         FileUtils.setFileFilter(jOpenFileDialog, openMP3);        
@@ -401,7 +352,7 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_btnPrevSongActionPerformed
 
     private void jMenuExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuExitActionPerformed
-        
+        System.out.println("Закрывает программу");
     }//GEN-LAST:event_jMenuExitActionPerformed
 
     private void jMenuSavePlayListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuSavePlayListActionPerformed
@@ -432,17 +383,14 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuSavePlayListActionPerformed
 
     private void jMenuOpenPlaylistActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuOpenPlaylistActionPerformed
-        FileUtils.setFileFilter(jOpenFileDialog, openPLS);
-        
+        FileUtils.setFileFilter(jOpenFileDialog, openPLS);        
         DefaultListModel reserv;
         
-        int count = jOpenFileDialog.showOpenDialog(this);
-        
+        int count = jOpenFileDialog.showOpenDialog(this);        
         if (count == JFileChooser.APPROVE_OPTION){
             File selectFile = jOpenFileDialog.getSelectedFile();
             reserv = (DefaultListModel) FileUtils.deserialize(selectFile.getPath());
-            playlist.getList().setModel(reserv);
-            playlist.getList().setSelectedIndex(0);
+            playlist.setListModel(reserv);
         }
     }//GEN-LAST:event_jMenuOpenPlaylistActionPerformed
 
@@ -460,9 +408,6 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuOpenFile;
     private javax.swing.JMenuItem jMenuOpenPlaylist;
     private javax.swing.JMenuItem jMenuSavePlayList;
-    private javax.swing.JMenuItem jMenuSkin1;
-    private javax.swing.JMenuItem jMenuSkin2;
-    private javax.swing.JMenu jMenuSkins;
     private javax.swing.JFileChooser jOpenFileDialog;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPopupMenu.Separator jSeparator1;

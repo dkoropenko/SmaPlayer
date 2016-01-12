@@ -76,10 +76,7 @@ public class FileUtils implements Serializable{
         catch (FileNotFoundException e){
             System.out.println(e);
         }
-        catch (IOException e){
-            System.out.println(e);
-        }
-        catch (ClassNotFoundException e){
+        catch (IOException | ClassNotFoundException e){
             System.out.println(e);
         }
         
