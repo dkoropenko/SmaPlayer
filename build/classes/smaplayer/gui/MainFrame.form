@@ -158,9 +158,18 @@
                   <Group type="102" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Component id="lbSongTime" alignment="0" min="-2" pref="182" max="-2" attributes="0"/>
-                          <Component id="lbSongName" alignment="0" max="32767" attributes="0"/>
                           <Component id="slSong" alignment="0" pref="320" max="32767" attributes="0"/>
+                          <Group type="102" attributes="0">
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Component id="lbSongTime" min="-2" pref="182" max="-2" attributes="0"/>
+                                      <EmptySpace max="32767" attributes="0"/>
+                                  </Group>
+                                  <Component id="lbSongName" max="32767" attributes="0"/>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="btnPlayList" min="-2" pref="35" max="-2" attributes="0"/>
+                          </Group>
                       </Group>
                       <EmptySpace max="32767" attributes="0"/>
                   </Group>
@@ -170,9 +179,14 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
                       <EmptySpace min="-2" pref="6" max="-2" attributes="0"/>
-                      <Component id="lbSongName" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="lbSongTime" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" attributes="0">
+                              <Component id="lbSongName" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="lbSongTime" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <Component id="btnPlayList" min="-2" pref="25" max="-2" attributes="0"/>
+                      </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="slSong" min="-2" pref="14" max="-2" attributes="0"/>
                       <EmptySpace max="32767" attributes="0"/>
@@ -197,6 +211,17 @@
                 <Property name="text" type="java.lang.String" value="&#x412;&#x440;&#x435;&#x43c;&#x44f; &#x43f;&#x435;&#x441;&#x43d;&#x438; &#x432; &#x444;&#x43e;&#x440;&#x43c;&#x430;&#x442;&#x435; &#x41c;&#x41c;:&#x421;&#x421;"/>
               </Properties>
             </Component>
+            <Component class="javax.swing.JButton" name="btnPlayList">
+              <Properties>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/smaplayer/images/playlist.png"/>
+                </Property>
+                <Property name="toolTipText" type="java.lang.String" value="&#x41f;&#x43b;&#x435;&#x439;&#x43b;&#x438;&#x441;&#x442;"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="OpenPlaylist"/>
+              </Events>
+            </Component>
           </SubComponents>
         </Container>
         <Container class="javax.swing.JPanel" name="pnlButtons">
@@ -219,9 +244,9 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="btnPlay" min="-2" pref="35" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="btnNextSong" min="-2" pref="35" max="-2" attributes="0"/>
+                      <Component id="btnStop" min="-2" pref="57" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="btnPlayList" min="-2" pref="35" max="-2" attributes="0"/>
+                      <Component id="btnNextSong" min="-2" pref="35" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="btnVollume" min="-2" pref="35" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
@@ -232,9 +257,13 @@
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" attributes="0">
+                  <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" attributes="0">
+                              <Component id="btnStop" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                          </Group>
                           <Component id="btnNextSong" alignment="1" max="32767" attributes="0"/>
                           <Component id="btnPrevSong" alignment="1" max="32767" attributes="0"/>
                           <Component id="btnPause" alignment="1" max="32767" attributes="0"/>
@@ -242,7 +271,6 @@
                           <Group type="102" alignment="1" attributes="0">
                               <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="btnPlayList" alignment="1" min="-2" pref="25" max="-2" attributes="0"/>
                                   <Component id="btnVollume" alignment="1" min="-2" pref="25" max="-2" attributes="0"/>
                                   <Component id="slVolume" alignment="1" min="-2" max="-2" attributes="0"/>
                               </Group>
@@ -272,6 +300,9 @@
                 </Property>
                 <Property name="toolTipText" type="java.lang.String" value="&#x41f;&#x430;&#x443;&#x437;&#x430;"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnPauseActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JButton" name="btnPlay">
               <Properties>
@@ -295,24 +326,17 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnNextSongActionPerformed"/>
               </Events>
             </Component>
-            <Component class="javax.swing.JButton" name="btnPlayList">
-              <Properties>
-                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/smaplayer/images/playlist.png"/>
-                </Property>
-                <Property name="toolTipText" type="java.lang.String" value="&#x41f;&#x43b;&#x435;&#x439;&#x43b;&#x438;&#x441;&#x442;"/>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="OpenPlaylist"/>
-              </Events>
-            </Component>
             <Component class="javax.swing.JToggleButton" name="btnVollume">
               <Properties>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                   <Image iconType="3" name="/smaplayer/images/volume_100.png"/>
                 </Property>
+                <Property name="selected" type="boolean" value="false"/>
                 <Property name="toolTipText" type="java.lang.String" value="&#x413;&#x440;&#x43e;&#x43c;&#x43a;&#x43e;&#x441;&#x442;&#x44c;"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnVollumeActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JSlider" name="slVolume">
               <Properties>
@@ -322,6 +346,14 @@
               <BindingProperties>
                 <BindingProperty name="enabled" source="btnVollume" sourcePath="${!selected}" target="slVolume" targetPath="enabled" updateStrategy="0" immediately="false"/>
               </BindingProperties>
+            </Component>
+            <Component class="javax.swing.JButton" name="btnStop">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Stop"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnStopActionPerformed"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>
