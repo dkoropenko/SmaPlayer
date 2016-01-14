@@ -13,9 +13,12 @@ import smaplayer.gui.Playlist;
  * @author koropenkods
  */
 public class Main {
-    public static void main(String[] args) {        
-        Playlist playlist = new Playlist();        
-        MainFrame window = new MainFrame(playlist);        
+    public static void main(String[] args) {
+        SmaPlayer player = new SmaPlayer();
+        
+        Playlist playlist = new Playlist(player);        
+        MainFrame window = new MainFrame(playlist, player); 
+        
         window.setVisible(true);
     }    
 }

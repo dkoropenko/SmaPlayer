@@ -17,25 +17,76 @@
         <Property name="useNullLayout" type="boolean" value="true"/>
       </Layout>
       <SubComponents>
-        <MenuItem class="javax.swing.JMenuItem" name="jAddSong">
+        <MenuItem class="javax.swing.JMenuItem" name="contextAddSong">
           <Properties>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/smaplayer/images/openfile.png"/>
+            </Property>
             <Property name="text" type="java.lang.String" value="&#x414;&#x43e;&#x431;&#x430;&#x432;&#x438;&#x442;&#x44c; &#x43f;&#x435;&#x441;&#x43d;&#x44e;"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="contextAddSongActionPerformed"/>
+          </Events>
         </MenuItem>
-        <MenuItem class="javax.swing.JMenuItem" name="jDeleteSong">
+        <MenuItem class="javax.swing.JMenuItem" name="contextDeleteSong">
           <Properties>
             <Property name="text" type="java.lang.String" value="&#x423;&#x434;&#x430;&#x43b;&#x438;&#x442;&#x44c; &#x43f;&#x435;&#x441;&#x43d;&#x44e;"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="contextDeleteSongActionPerformed"/>
+          </Events>
         </MenuItem>
-        <MenuItem class="javax.swing.JMenuItem" name="jAddPlaylist">
+        <MenuItem class="javax.swing.JMenuItem" name="contextAddPlaylist">
           <Properties>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/smaplayer/images/openplaylist.png"/>
+            </Property>
             <Property name="text" type="java.lang.String" value="&#x41e;&#x442;&#x43a;&#x440;&#x44b;&#x442;&#x44c; &#x43f;&#x43b;&#x435;&#x439;&#x43b;&#x438;&#x441;&#x442;"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="contextAddPlaylistActionPerformed"/>
+          </Events>
         </MenuItem>
-        <MenuItem class="javax.swing.JMenuItem" name="jClear">
+        <MenuItem class="javax.swing.JMenuItem" name="contextClear">
           <Properties>
             <Property name="text" type="java.lang.String" value="&#x41e;&#x447;&#x438;&#x441;&#x442;&#x438;&#x442;&#x44c; &#x441;&#x43f;&#x438;&#x441;&#x43e;&#x43a;"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="contextClearActionPerformed"/>
+          </Events>
+        </MenuItem>
+        <MenuItem class="javax.swing.JMenuItem" name="contextPlay">
+          <Properties>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/smaplayer/images/play.png"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="&#x412;&#x43e;&#x441;&#x43f;&#x440;&#x43e;&#x438;&#x437;&#x432;&#x435;&#x441;&#x442;&#x438;"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="contextPlayActionPerformed"/>
+          </Events>
+        </MenuItem>
+        <MenuItem class="javax.swing.JMenuItem" name="contextPause">
+          <Properties>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/smaplayer/images/pause.png"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="&#x41f;&#x430;&#x443;&#x437;&#x430;"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="contextPauseActionPerformed"/>
+          </Events>
+        </MenuItem>
+        <MenuItem class="javax.swing.JMenuItem" name="contextStop">
+          <Properties>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/smaplayer/images/stop.png"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="&#x421;&#x442;&#x43e;&#x43f;"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="contextStopActionPerformed"/>
+          </Events>
         </MenuItem>
       </SubComponents>
     </Container>
@@ -170,9 +221,9 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="btnAddMp3" min="-2" max="-2" attributes="0"/>
+                          <Component id="btnAddMp3" min="-2" pref="39" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="btnAddPlayList" min="-2" max="-2" attributes="0"/>
+                          <Component id="btnAddPlayList" min="-2" pref="39" max="-2" attributes="0"/>
                           <EmptySpace max="32767" attributes="0"/>
                           <Component id="btnDell" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
@@ -185,11 +236,13 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="btnAddMp3" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="btnDell" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="btnClear" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="btnAddPlayList" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="btnAddMp3" min="-2" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="btnDell" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="btnClear" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="btnAddPlayList" alignment="0" max="32767" attributes="0"/>
+                              </Group>
                           </Group>
                           <EmptySpace max="32767" attributes="0"/>
                       </Group>
@@ -199,7 +252,10 @@
               <SubComponents>
                 <Component class="javax.swing.JButton" name="btnAddMp3">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Add"/>
+                    <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                      <Image iconType="3" name="/smaplayer/images/openfile.png"/>
+                    </Property>
+                    <Property name="toolTipText" type="java.lang.String" value="&#x414;&#x43e;&#x431;&#x430;&#x432;&#x438;&#x442;&#x44c; &#x43f;&#x435;&#x441;&#x43d;&#x438;"/>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnAddMp3ActionPerformed"/>
@@ -207,7 +263,10 @@
                 </Component>
                 <Component class="javax.swing.JButton" name="btnAddPlayList">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="PlayList"/>
+                    <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                      <Image iconType="3" name="/smaplayer/images/openplaylist.png"/>
+                    </Property>
+                    <Property name="toolTipText" type="java.lang.String" value="&#x41e;&#x442;&#x43a;&#x440;&#x44b;&#x442;&#x44c; &#x43f;&#x43b;&#x435;&#x439;&#x43b;&#x438;&#x441;&#x442;"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JButton" name="btnDell">

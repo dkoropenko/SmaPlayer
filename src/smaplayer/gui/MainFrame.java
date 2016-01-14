@@ -5,6 +5,8 @@
  */
 package smaplayer.gui;
 
+import java.awt.Point;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -34,19 +36,20 @@ public class MainFrame extends javax.swing.JFrame {
     private Playlist playlist;
     private String skin = "javax.swing.plaf.metal.MetalLookAndFeel";
     private int playedSong;
-    private SmaPlayer doing = new SmaPlayer();
+    private SmaPlayer doing;
 
     /**
      * Creates new form MainFrame
      * @param playlist
      */
-    public MainFrame(Playlist playlist) {
+    public MainFrame(Playlist playlist, SmaPlayer player) {
         initComponents();
         this.playlist = playlist;        
-    }
-    
-    public static void setPlayedSong(String songName){
+        this.doing = player;
         
+        doing.setLabelName(lbSongName);
+        
+        doing.setVolume(slVolume.getValue(), slVolume.getMaximum());
     }
     
     /**
@@ -65,6 +68,7 @@ public class MainFrame extends javax.swing.JFrame {
         slSong = new javax.swing.JSlider();
         lbSongName = new javax.swing.JLabel();
         lbSongTime = new javax.swing.JLabel();
+        slPan = new javax.swing.JSlider();
         btnPlayList = new javax.swing.JButton();
         pnlButtons = new javax.swing.JPanel();
         btnPrevSong = new javax.swing.JButton();
@@ -87,7 +91,7 @@ public class MainFrame extends javax.swing.JFrame {
         jOpenFileDialog.setMultiSelectionEnabled(true);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("SmaPlayer");
+        setTitle("SmaPlayer V: 0.1");
         setIconImage(new ImageIcon("src/smaplayer/images/mainIcon.png").getImage());
         setLocation(new java.awt.Point(500, 500));
         setMinimumSize(new java.awt.Dimension(350, 172));
@@ -97,12 +101,28 @@ public class MainFrame extends javax.swing.JFrame {
 
         pnlStatus.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
+        slSong.setMaximum(50);
+        slSong.setPaintLabels(true);
         slSong.setToolTipText("");
         slSong.setValue(0);
+        slSong.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                slSongStateChanged(evt);
+            }
+        });
 
         lbSongName.setText("Название песни");
 
         lbSongTime.setText("Время песни в формате ММ:СС");
+
+        slPan.setMaximum(200);
+        slPan.setMinorTickSpacing(10);
+        slPan.setValue(100);
+        slPan.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                slPanStateChanged(evt);
+            }
+        });
 
         btnPlayList.setIcon(new javax.swing.ImageIcon(getClass().getResource("/smaplayer/images/playlist.png"))); // NOI18N
         btnPlayList.setToolTipText("Плейлист");
@@ -116,30 +136,32 @@ public class MainFrame extends javax.swing.JFrame {
         pnlStatus.setLayout(pnlStatusLayout);
         pnlStatusLayout.setHorizontalGroup(
             pnlStatusLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnlStatusLayout.createSequentialGroup()
-                .addContainerGap()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlStatusLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(pnlStatusLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(slSong, javax.swing.GroupLayout.DEFAULT_SIZE, 320, Short.MAX_VALUE)
+                    .addComponent(slSong, javax.swing.GroupLayout.PREFERRED_SIZE, 347, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(pnlStatusLayout.createSequentialGroup()
-                        .addGroup(pnlStatusLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(pnlStatusLayout.createSequentialGroup()
-                                .addComponent(lbSongTime, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addComponent(lbSongName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(pnlStatusLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(lbSongName, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lbSongTime, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(slPan, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnPlayList, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(174, 174, 174))
         );
         pnlStatusLayout.setVerticalGroup(
             pnlStatusLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlStatusLayout.createSequentialGroup()
-                .addGap(6, 6, 6)
                 .addGroup(pnlStatusLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(pnlStatusLayout.createSequentialGroup()
+                        .addGap(6, 6, 6)
                         .addComponent(lbSongName)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(lbSongTime))
-                    .addComponent(btnPlayList, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(pnlStatusLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(slPan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnPlayList, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(slSong, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -179,8 +201,7 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
 
-        btnVollume.setIcon(new javax.swing.ImageIcon(getClass().getResource("/smaplayer/images/volume_100.png"))); // NOI18N
-        btnVollume.setSelected(false);
+        btnVollume.setIcon(new javax.swing.ImageIcon(getClass().getResource("/smaplayer/images/volume.png"))); // NOI18N
         btnVollume.setToolTipText("Громкость");
         btnVollume.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -188,13 +209,23 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
 
+        slVolume.setMaximum(200);
+        slVolume.setMinorTickSpacing(5);
+        slVolume.setSnapToTicks(true);
         slVolume.setToolTipText("");
         slVolume.setValue(100);
 
         org.jdesktop.beansbinding.Binding binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, btnVollume, org.jdesktop.beansbinding.ELProperty.create("${!selected}"), slVolume, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
         bindingGroup.addBinding(binding);
 
-        btnStop.setText("Stop");
+        slVolume.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                slVolumeStateChanged(evt);
+            }
+        });
+
+        btnStop.setIcon(new javax.swing.ImageIcon(getClass().getResource("/smaplayer/images/stop.png"))); // NOI18N
+        btnStop.setToolTipText("Стоп");
         btnStop.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnStopActionPerformed(evt);
@@ -213,32 +244,32 @@ public class MainFrame extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnPlay, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnStop, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnStop, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnNextSong, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnVollume, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(slVolume, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(14, Short.MAX_VALUE))
+                .addComponent(slVolume, javax.swing.GroupLayout.DEFAULT_SIZE, 96, Short.MAX_VALUE)
+                .addContainerGap())
         );
         pnlButtonsLayout.setVerticalGroup(
             pnlButtonsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlButtonsLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pnlButtonsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pnlButtonsLayout.createSequentialGroup()
-                        .addComponent(btnStop)
-                        .addGap(0, 0, Short.MAX_VALUE))
                     .addComponent(btnNextSong, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnPrevSong, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnPause, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnPlay, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlButtonsLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(slVolume, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(pnlButtonsLayout.createSequentialGroup()
                         .addGroup(pnlButtonsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btnVollume, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(slVolume, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(btnVollume, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnStop))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
 
@@ -246,8 +277,8 @@ public class MainFrame extends javax.swing.JFrame {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(pnlStatus, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(pnlButtons, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(pnlStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -261,6 +292,7 @@ public class MainFrame extends javax.swing.JFrame {
         jMenuFile.setText("Файл");
 
         jMenuOpenFile.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuOpenFile.setIcon(new javax.swing.ImageIcon(getClass().getResource("/smaplayer/images/openfile.png"))); // NOI18N
         jMenuOpenFile.setText("Открыть файл");
         jMenuOpenFile.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -270,6 +302,7 @@ public class MainFrame extends javax.swing.JFrame {
         jMenuFile.add(jMenuOpenFile);
 
         jMenuOpenPlaylist.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_P, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuOpenPlaylist.setIcon(new javax.swing.ImageIcon(getClass().getResource("/smaplayer/images/openplaylist.png"))); // NOI18N
         jMenuOpenPlaylist.setText("Открыть плейлист");
         jMenuOpenPlaylist.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -279,6 +312,7 @@ public class MainFrame extends javax.swing.JFrame {
         jMenuFile.add(jMenuOpenPlaylist);
 
         jMenuSavePlayList.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuSavePlayList.setIcon(new javax.swing.ImageIcon(getClass().getResource("/smaplayer/images/savefile.png"))); // NOI18N
         jMenuSavePlayList.setText("Сохранить плейлист");
         jMenuSavePlayList.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -289,6 +323,7 @@ public class MainFrame extends javax.swing.JFrame {
         jMenuFile.add(jSeparator1);
 
         jMenuExit.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Q, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuExit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/smaplayer/images/exit.png"))); // NOI18N
         jMenuExit.setText("Закрыть программу");
         jMenuExit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -322,6 +357,11 @@ public class MainFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void OpenPlaylist(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OpenPlaylist
+        Point coordinates = this.getLocation();
+        double x = coordinates.getX();
+        double y = coordinates.getY();
+        
+        playlist.setLocation((int)x+400, (int)y);
         playlist.setVisible(true);
     }//GEN-LAST:event_OpenPlaylist
 
@@ -359,10 +399,10 @@ public class MainFrame extends javax.swing.JFrame {
         if (playedSong < sizeOfList){
             playedSong++;
             Mp3 mp3 = (Mp3) playlist.getListModel().getElementAt(playedSong);
-            lbSongName.setText(mp3.toString());
             playlist.getList().setSelectedIndex(playedSong);
             
             doing.play(mp3.getSongPatch());
+            doing.setVolume(slVolume.getValue(), slVolume.getMaximum());
         }
     }//GEN-LAST:event_btnNextSongActionPerformed
 
@@ -371,11 +411,11 @@ public class MainFrame extends javax.swing.JFrame {
         if (selectedSong != -1){
             //Выводим название песни.
             Mp3 mp3 = (Mp3) playlist.getListModel().getElementAt(selectedSong);
-            lbSongName.setText(mp3.toString());
             playedSong = selectedSong;
             
             //Начинаем проигрывание песни.
             doing.play(mp3.getSongPatch());
+            doing.setVolume(slVolume.getValue(), slVolume.getMaximum());
         }        
     }//GEN-LAST:event_btnPlayActionPerformed
 
@@ -383,10 +423,10 @@ public class MainFrame extends javax.swing.JFrame {
         if (playedSong > 0){
             playedSong--;
             Mp3 mp3 = (Mp3) playlist.getListModel().getElementAt(playedSong);
-            lbSongName.setText(mp3.toString());
             playlist.getList().setSelectedIndex(playedSong);
             
             doing.play(mp3.getSongPatch());
+            doing.setVolume(slVolume.getValue(), slVolume.getMaximum());
         }
     }//GEN-LAST:event_btnPrevSongActionPerformed
 
@@ -438,15 +478,27 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_btnPauseActionPerformed
 
     private void btnVollumeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVollumeActionPerformed
-        if (!btnVollume.isEnabled())
+        if (btnVollume.isSelected())
             slVolume.setValue(0);
         else
-            slVolume.setValue(100);
+            slVolume.setValue(10);
     }//GEN-LAST:event_btnVollumeActionPerformed
 
     private void btnStopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStopActionPerformed
         doing.stop();
     }//GEN-LAST:event_btnStopActionPerformed
+
+    private void slVolumeStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_slVolumeStateChanged
+        doing.setVolume(slVolume.getValue(), slVolume.getMaximum());        
+    }//GEN-LAST:event_slVolumeStateChanged
+
+    private void slSongStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_slSongStateChanged
+        //doing.changePlayPosition(slSong.getValue());
+    }//GEN-LAST:event_slSongStateChanged
+
+    private void slPanStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_slPanStateChanged
+        doing.changePan(slPan.getValue());
+    }//GEN-LAST:event_slPanStateChanged
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnNextSong;
@@ -470,6 +522,7 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JLabel lbSongTime;
     private javax.swing.JPanel pnlButtons;
     private javax.swing.JPanel pnlStatus;
+    private javax.swing.JSlider slPan;
     private javax.swing.JSlider slSong;
     private javax.swing.JSlider slVolume;
     private org.jdesktop.beansbinding.BindingGroup bindingGroup;
