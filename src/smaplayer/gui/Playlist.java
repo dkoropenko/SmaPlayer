@@ -244,10 +244,10 @@ public class Playlist extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jMenuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnAddMp3)
+                    .addComponent(btnAddPlayList, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jMenuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(btnDell)
-                        .addComponent(btnClear)
-                        .addComponent(btnAddPlayList, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(btnClear)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -358,6 +358,8 @@ public class Playlist extends javax.swing.JFrame {
             if (index != -1){
                 Mp3 mp3 = (Mp3) myListModel.getElementAt(index);
                 
+                doing.setSongIndex(index);
+                
                 doing.play(mp3.getSongPatch());  
                 doing.setVolume(doing.getVolume(), 200);
             }
@@ -370,6 +372,8 @@ public class Playlist extends javax.swing.JFrame {
                 
                 if (index != -1){
                     Mp3 mp3 = (Mp3) myListModel.getElementAt(index);
+                    
+                    doing.setSongIndex(index);
                     
                     doing.play(mp3.getSongPatch());
                     doing.setVolume(doing.getVolume(), 200);
@@ -433,6 +437,8 @@ public class Playlist extends javax.swing.JFrame {
                 
                 if (index != -1){
                     Mp3 mp3 = (Mp3) myListModel.getElementAt(index);
+                    
+                    doing.setSongIndex(index);
                     
                     doing.play(mp3.getSongPatch());
                     doing.setVolume(doing.getVolume(), 200);
