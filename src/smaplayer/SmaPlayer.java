@@ -129,4 +129,13 @@ public class SmaPlayer{
             Logger.getLogger(SmaPlayer.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    public void jump(long bytes) {
+        try {
+            player.seek(bytes);
+            player.setGain(volumeValue);// устанавливаем уровень звука
+        } catch (BasicPlayerException ex) {
+            Logger.getLogger(SmaPlayer.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 }

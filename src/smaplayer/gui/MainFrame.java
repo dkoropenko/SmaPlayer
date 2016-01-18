@@ -8,6 +8,7 @@ package smaplayer.gui;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
@@ -19,6 +20,9 @@ import javax.swing.LookAndFeel;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import javazoom.jlgui.basicplayer.BasicController;
+import javazoom.jlgui.basicplayer.BasicPlayerEvent;
+import javazoom.jlgui.basicplayer.BasicPlayerListener;
 import smaplayer.FileUtils;
 import smaplayer.Mp3;
 import smaplayer.PlayerFileFilter;
@@ -28,15 +32,26 @@ import smaplayer.SmaPlayer;
  *
  * @author Nick
  */
-public class MainFrame extends javax.swing.JFrame {
+public class MainFrame extends javax.swing.JFrame implements BasicPlayerListener {
     
+    //Два объекта для открытия файлов MP3 и PLS
     private PlayerFileFilter openMP3 = new PlayerFileFilter(FileUtils.MP3_FILES_EXP, FileUtils.MP3_FILES_DESC);
     private PlayerFileFilter openPLS = new PlayerFileFilter(FileUtils.PLS_FILES_EXP, FileUtils.PLS_FILES_DESC);
     
-    private Playlist playlist;
-    private String skin = "javax.swing.plaf.metal.MetalLookAndFeel";
-    private int playedSong;
-    private SmaPlayer doing;
+    //переменные
+    private Playlist playlist; //Плейлист для доступа к окну Playlist
+    private int playedSong; //Индекс играющей песни для переключения мелодий
+    private SmaPlayer doing; //Объект плеера. 
+    
+    //Переменые для ползунка статуса песни
+    private long songTime; //Длительность песни
+    private long timeFromStart; //Прошло секунд с начала песни
+    private int songSize; //Размер песни в байтах
+    private double songPosition = 0.0; //Позиция ползунка
+    //Передвижение ползунка (вручную\автоматически
+    private boolean autoMove = false;
+    private boolean manualMove = false;
+    
 
     /**
      * Creates new form MainFrame
@@ -47,8 +62,103 @@ public class MainFrame extends javax.swing.JFrame {
         this.playlist = playlist;        
         this.doing = player;
         
+        //передаем элементы интерфейса в плеер
         doing.setUIElements(lbSongName, btnPlay);        
+        //Устанавливаем громкость
         doing.setVolume(slVolume.getValue(), slVolume.getMaximum());
+    }
+    
+    @Override
+    public void opened(Object o, Map map) {
+        //Определяем длину песни и ее размер в байтах
+        songTime = (long) Math.round((((Long) map.get("duration")).longValue()) / 1000000);
+        songSize = (int) Math.round(((Integer) map.get("mp3.length.bytes")).intValue());
+    }
+    @Override
+    public void progress(int bytesread, long l, byte[] bytes, Map map) {
+       float progress = -1.0f;
+       
+       if (bytesread > 0 && songTime > 0)
+           progress = bytesread * 1.0f / songSize * 1.0f;
+       
+       //Сколько секунд прошло
+       timeFromStart = (long) progress * songTime;
+       
+       if (songTime != 0){
+           if (manualMove == false){
+               slSong.setValue((int) Math.round(timeFromStart * 1000 / songTime));
+           }
+       }
+    }
+    @Override
+    public void stateUpdated(BasicPlayerEvent bpe) {
+        int state = bpe.getCode();
+        
+        if (state == BasicPlayerEvent.PLAYING)
+            manualMove = false;
+        else if (state == BasicPlayerEvent.SEEKING)
+            manualMove = true;
+        else if (state == BasicPlayerEvent.EOM)
+            nextSong();
+    }
+    @Override
+    public void setController(BasicController bc) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    private void processSeek(double bytes){
+        try {
+            long skipBytes = (long) Math.round(((Integer) songSize).intValue() * bytes);
+            doing.jump(skipBytes);
+        } catch (Exception e) {
+            e.printStackTrace();
+            manualMove = false;
+        }
+    }
+    
+    private void nextSong(){
+        int sizeOfList = playlist.getListModel().getSize()-1;
+        playedSong = doing.getSongIndex();
+        
+        if (playedSong < sizeOfList){
+            playedSong++;
+            doing.setSongIndex(playedSong);
+            
+            Mp3 mp3 = (Mp3) playlist.getListModel().getElementAt(playedSong);
+            playlist.getList().setSelectedIndex(playedSong);
+            
+            doing.play(mp3.getSongPatch());
+            doing.setVolume(slVolume.getValue(), slVolume.getMaximum());
+        }
+    }    
+    private void prevSong(){
+        playedSong = doing.getSongIndex();
+        
+        if (playedSong > 0){
+            
+            playedSong--;
+            doing.setSongIndex(playedSong);
+            
+            Mp3 mp3 = (Mp3) playlist.getListModel().getElementAt(playedSong);
+            playlist.getList().setSelectedIndex(playedSong);
+            
+            doing.play(mp3.getSongPatch());
+            doing.setVolume(slVolume.getValue(), slVolume.getMaximum());
+        }
+    }
+    private void playSong(){
+        int selectedSong = playlist.getList().getSelectedIndex();
+        if (selectedSong != -1){
+            //Выводим название песни.
+            Mp3 mp3 = (Mp3) playlist.getListModel().getElementAt(selectedSong);
+            
+            //Записываем индекс играемой песни.
+            doing.setSongIndex(selectedSong);
+            
+            //Начинаем проигрывание песни.
+            doing.play(mp3.getSongPatch());
+            doing.setVolume(slVolume.getValue(), slVolume.getMaximum());
+        }    
     }
     
     /**
@@ -343,6 +453,7 @@ public class MainFrame extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+    //Открываем окно плейлиста справа от основного плеера.
     private void OpenPlaylist(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OpenPlaylist
         Point coordinates = this.getLocation();
         double x = coordinates.getX();
@@ -351,6 +462,7 @@ public class MainFrame extends javax.swing.JFrame {
         playlist.setLocation((int)x+400, (int)y);
         playlist.setVisible(true);
     }//GEN-LAST:event_OpenPlaylist
+    //Открытие файлов через меню.
     private void jMenuOpenFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuOpenFileActionPerformed
         FileUtils.setFileFilter(jOpenFileDialog, openMP3);        
         int count = jOpenFileDialog.showOpenDialog(this);
@@ -378,58 +490,23 @@ public class MainFrame extends javax.swing.JFrame {
         }
         playlist.getList().setSelectedIndex(0);
     }//GEN-LAST:event_jMenuOpenFileActionPerformed
-
+    //Переключает на следующую песню.
     private void btnNextSongActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNextSongActionPerformed
-        int sizeOfList = playlist.getListModel().getSize()-1;
-        playedSong = doing.getSongIndex();
-        
-        if (playedSong < sizeOfList){
-            playedSong++;
-            doing.setSongIndex(playedSong);
-            
-            Mp3 mp3 = (Mp3) playlist.getListModel().getElementAt(playedSong);
-            playlist.getList().setSelectedIndex(playedSong);
-            
-            doing.play(mp3.getSongPatch());
-            doing.setVolume(slVolume.getValue(), slVolume.getMaximum());
-        }
+        nextSong();
     }//GEN-LAST:event_btnNextSongActionPerformed
-
+    //Включаем мелодию. Или ставим на паузу, если играет.
     private void btnPlayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPlayActionPerformed
-        int selectedSong = playlist.getList().getSelectedIndex();
-        if (selectedSong != -1){
-            //Выводим название песни.
-            Mp3 mp3 = (Mp3) playlist.getListModel().getElementAt(selectedSong);
-            
-            //Записываем индекс играемой песни.
-            doing.setSongIndex(selectedSong);
-            
-            //Начинаем проигрывание песни.
-            doing.play(mp3.getSongPatch());
-            doing.setVolume(slVolume.getValue(), slVolume.getMaximum());
-        }        
+        playSong();
     }//GEN-LAST:event_btnPlayActionPerformed
-
+    //Переключает на предыдущую песню.
     private void btnPrevSongActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrevSongActionPerformed
-        playedSong = doing.getSongIndex();
-        
-        if (playedSong > 0){
-            
-            playedSong--;
-            doing.setSongIndex(playedSong);
-            
-            Mp3 mp3 = (Mp3) playlist.getListModel().getElementAt(playedSong);
-            playlist.getList().setSelectedIndex(playedSong);
-            
-            doing.play(mp3.getSongPatch());
-            doing.setVolume(slVolume.getValue(), slVolume.getMaximum());
-        }
+        prevSong();
     }//GEN-LAST:event_btnPrevSongActionPerformed
-
+    //Выход из программы.
     private void jMenuExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuExitActionPerformed
-        System.out.println("Закрывает программу");
+        System.exit(0);
     }//GEN-LAST:event_jMenuExitActionPerformed
-
+    //Сохранение и открытие плейлиста.
     private void jMenuSavePlayListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuSavePlayListActionPerformed
         FileUtils.setFileFilter(jOpenFileDialog, openPLS);        
         int count = jOpenFileDialog.showSaveDialog(this);
@@ -467,23 +544,36 @@ public class MainFrame extends javax.swing.JFrame {
             playlist.setListModel(reserv);
         }
     }//GEN-LAST:event_jMenuOpenPlaylistActionPerformed
-
+    //Выключение звука.
     private void btnVollumeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVollumeActionPerformed
         if (btnVollume.isSelected())
             slVolume.setValue(0);
         else
             slVolume.setValue(10);
     }//GEN-LAST:event_btnVollumeActionPerformed
+    //Выключает воспроизведение
     private void btnStopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStopActionPerformed
         doing.stop();
     }//GEN-LAST:event_btnStopActionPerformed
-
+    //Изменение громкости
     private void slVolumeStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_slVolumeStateChanged
         doing.setVolume(slVolume.getValue(), slVolume.getMaximum());        
     }//GEN-LAST:event_slVolumeStateChanged
+    //Ползунок статуса дорожки.
     private void slSongStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_slSongStateChanged
-        //doing.changePlayPosition(slSong.getValue());
+       if (slSong.getValueIsAdjusting() == false){
+           if (autoMove == true){
+               autoMove = false;
+               songPosition = slSong.getValue() * 1.0 / 1000;
+               processSeek(songPosition);
+           }
+           else{
+               autoMove = true;
+               manualMove = true;
+           }               
+       }
     }//GEN-LAST:event_slSongStateChanged
+    //Уровень "Лево|Право"
     private void slPanStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_slPanStateChanged
         doing.changePan(slPan.getValue());
     }//GEN-LAST:event_slPanStateChanged

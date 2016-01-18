@@ -38,8 +38,13 @@ public class FileUtils implements Serializable{
         File file = new File(name);
         String result;
         
-        int lastDotIndex = file.getName().lastIndexOf(".");        
-        return result = name.substring(0, lastDotIndex);
+        int lastDotIndex = file.getName().lastIndexOf(".");
+        result = name.substring(0, lastDotIndex);        
+        
+        if (result.length() > 30){
+            result = result.substring(0, 25) + "...";
+        }        
+        return result;
     }
     
     public static String getFileExp(String name){
