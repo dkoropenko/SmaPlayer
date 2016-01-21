@@ -17,7 +17,7 @@ public class Main {
         SmaPlayer player = new SmaPlayer();
         
         Playlist playlist = new Playlist(player);        
-        MainFrame window = new MainFrame(playlist, player); 
+        MainFrame window = new MainFrame(playlist, player);
         
         window.setVisible(true);
     }    

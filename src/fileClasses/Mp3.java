@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package smaplayer;
+package fileClasses;
 
+import fileClasses.FileUtils;
 import java.io.Serializable;
 
 /**

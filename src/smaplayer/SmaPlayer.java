@@ -5,6 +5,7 @@
  */
 package smaplayer;
 
+import fileClasses.Mp3;
 import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -13,13 +14,13 @@ import javax.swing.JLabel;
 import javazoom.jlgui.basicplayer.BasicPlayer;
 import javazoom.jlgui.basicplayer.BasicPlayerException;
 import javax.swing.ImageIcon;
+import javazoom.jlgui.basicplayer.BasicPlayerListener;
 
 
-public class SmaPlayer{
+public class SmaPlayer extends BasicPlayer{
     
     //Переменные статуса песни.
     private String playedSong;
-    private int playedSongIndex;
     private double volumeValue;
     
     //Переменные, которые зависят от статуса песни.
@@ -28,14 +29,14 @@ public class SmaPlayer{
     private JLabel songTime;
     private JButton btnPlayPause;
     
+    
+    
+    public void setBasicPlayerListener(BasicPlayerListener event){
+        player.addBasicPlayerListener(event);
+    }
+    
     public String getPlayedSongName(){
         return this.playedSong;
-    }
-    public void setSongIndex(int index){
-        playedSongIndex = index;
-    }
-    public int getSongIndex(){
-        return this.playedSongIndex;
     }
     
     //Передаем переменные для изменения UI
@@ -72,7 +73,7 @@ public class SmaPlayer{
             
             player.open(mp3);            
             player.play();
-            player.setGain(volumeValue);
+            this.setVolume((int)volumeValue, 200);
             
         } catch (BasicPlayerException ex) {
             Logger.getLogger(SmaPlayer.class.getName()).log(Level.SEVERE, null, ex);
@@ -133,9 +134,29 @@ public class SmaPlayer{
     public void jump(long bytes) {
         try {
             player.seek(bytes);
-            player.setGain(volumeValue);// устанавливаем уровень звука
+            this.setVolume((int)volumeValue, 200);// устанавливаем уровень звука
         } catch (BasicPlayerException ex) {
             Logger.getLogger(SmaPlayer.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    public String getTime(long time){
+        String result = "";
+        int hour, minute, second;
+        
+        hour = (int) (time / 60 / 60);
+        minute = (int)((time - hour * 60 * 60) / 60);
+        second = (int) time - (minute * 60);
+        
+        if (hour <= 9) result = "0"+ hour;
+        else result = ""+ hour;
+        
+        if (minute <= 9) result += ":0"+ minute;
+        else result += ":"+ minute;
+        
+        if (second <= 9) result += ":0"+ second;
+        else result += ":"+ second;
+        
+        return result;
     }
 }

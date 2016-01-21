@@ -30,6 +30,9 @@
         </MenuItem>
         <MenuItem class="javax.swing.JMenuItem" name="contextDeleteSong">
           <Properties>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/smaplayer/images/deletenfile.png"/>
+            </Property>
             <Property name="text" type="java.lang.String" value="&#x423;&#x434;&#x430;&#x43b;&#x438;&#x442;&#x44c; &#x43f;&#x435;&#x441;&#x43d;&#x44e;"/>
           </Properties>
           <Events>
@@ -51,45 +54,13 @@
         </MenuItem>
         <MenuItem class="javax.swing.JMenuItem" name="contextClear">
           <Properties>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/smaplayer/images/clearplaylist.png"/>
+            </Property>
             <Property name="text" type="java.lang.String" value="&#x41e;&#x447;&#x438;&#x441;&#x442;&#x438;&#x442;&#x44c; &#x441;&#x43f;&#x438;&#x441;&#x43e;&#x43a;"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="contextClearActionPerformed"/>
-          </Events>
-        </MenuItem>
-        <Component class="javax.swing.JPopupMenu$Separator" name="jSeparator1">
-        </Component>
-        <MenuItem class="javax.swing.JMenuItem" name="contextPlay">
-          <Properties>
-            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/smaplayer/images/play.png"/>
-            </Property>
-            <Property name="text" type="java.lang.String" value="&#x412;&#x43e;&#x441;&#x43f;&#x440;&#x43e;&#x438;&#x437;&#x432;&#x435;&#x441;&#x442;&#x438;"/>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="contextPlayActionPerformed"/>
-          </Events>
-        </MenuItem>
-        <MenuItem class="javax.swing.JMenuItem" name="contextPause">
-          <Properties>
-            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/smaplayer/images/pause.png"/>
-            </Property>
-            <Property name="text" type="java.lang.String" value="&#x41f;&#x430;&#x443;&#x437;&#x430;"/>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="contextPauseActionPerformed"/>
-          </Events>
-        </MenuItem>
-        <MenuItem class="javax.swing.JMenuItem" name="contextStop">
-          <Properties>
-            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/smaplayer/images/stop.png"/>
-            </Property>
-            <Property name="text" type="java.lang.String" value="&#x421;&#x442;&#x43e;&#x43f;"/>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="contextStopActionPerformed"/>
           </Events>
         </MenuItem>
       </SubComponents>
@@ -172,13 +143,13 @@
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="jMenuPanel" alignment="1" max="32767" attributes="0"/>
-                  <Component id="jPLContainer" alignment="1" max="32767" attributes="0"/>
+                  <Component id="jPLContainer" alignment="0" min="-2" pref="260" max="-2" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
-                      <Component id="jPLContainer" pref="353" max="32767" attributes="0"/>
+                      <Component id="jPLContainer" min="-2" pref="353" max="-2" attributes="0"/>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Component id="jMenuPanel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
@@ -188,6 +159,15 @@
           </Layout>
           <SubComponents>
             <Container class="javax.swing.JScrollPane" name="jPLContainer">
+              <Properties>
+                <Property name="horizontalScrollBarPolicy" type="int" value="31"/>
+                <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+                  <Dimension value="[260, 353]"/>
+                </Property>
+                <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+                  <Dimension value="[260, 353]"/>
+                </Property>
+              </Properties>
               <AuxValues>
                 <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
               </AuxValues>
@@ -243,10 +223,8 @@
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="btnAddMp3" min="-2" max="-2" attributes="0"/>
                               <Component id="btnAddPlayList" alignment="0" max="32767" attributes="0"/>
-                              <Group type="103" groupAlignment="3" attributes="0">
-                                  <Component id="btnVK" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="btnOdnoklassniki" alignment="3" min="-2" max="-2" attributes="0"/>
-                              </Group>
+                              <Component id="btnVK" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="btnOdnoklassniki" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="32767" attributes="0"/>
                       </Group>
@@ -272,6 +250,9 @@
                     </Property>
                     <Property name="toolTipText" type="java.lang.String" value="&#x41e;&#x442;&#x43a;&#x440;&#x44b;&#x442;&#x44c; &#x43f;&#x43b;&#x435;&#x439;&#x43b;&#x438;&#x441;&#x442;"/>
                   </Properties>
+                  <Events>
+                    <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="btnAddPlayListMouseClicked"/>
+                  </Events>
                 </Component>
                 <Component class="javax.swing.JButton" name="btnVK">
                   <Properties>

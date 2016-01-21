@@ -20,9 +20,9 @@ import javax.swing.JList;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-import smaplayer.FileUtils;
-import smaplayer.Mp3;
-import smaplayer.PlayerFileFilter;
+import fileClasses.FileUtils;
+import fileClasses.Mp3;
+import fileClasses.PlayerFileFilter;
 import smaplayer.SmaPlayer;
 
 /**
@@ -98,10 +98,6 @@ public class Playlist extends javax.swing.JFrame {
         jSeparator2 = new javax.swing.JPopupMenu.Separator();
         contextAddPlaylist = new javax.swing.JMenuItem();
         contextClear = new javax.swing.JMenuItem();
-        jSeparator1 = new javax.swing.JPopupMenu.Separator();
-        contextPlay = new javax.swing.JMenuItem();
-        contextPause = new javax.swing.JMenuItem();
-        contextStop = new javax.swing.JMenuItem();
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         jPLContainer = new javax.swing.JScrollPane();
@@ -125,6 +121,7 @@ public class Playlist extends javax.swing.JFrame {
         });
         jMouseMenu.add(contextAddSong);
 
+        contextDeleteSong.setIcon(new javax.swing.ImageIcon(getClass().getResource("/smaplayer/images/deletenfile.png"))); // NOI18N
         contextDeleteSong.setText("Удалить песню");
         contextDeleteSong.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -143,6 +140,7 @@ public class Playlist extends javax.swing.JFrame {
         });
         jMouseMenu.add(contextAddPlaylist);
 
+        contextClear.setIcon(new javax.swing.ImageIcon(getClass().getResource("/smaplayer/images/clearplaylist.png"))); // NOI18N
         contextClear.setText("Очистить список");
         contextClear.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -150,34 +148,6 @@ public class Playlist extends javax.swing.JFrame {
             }
         });
         jMouseMenu.add(contextClear);
-        jMouseMenu.add(jSeparator1);
-
-        contextPlay.setIcon(new javax.swing.ImageIcon(getClass().getResource("/smaplayer/images/play.png"))); // NOI18N
-        contextPlay.setText("Воспроизвести");
-        contextPlay.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                contextPlayActionPerformed(evt);
-            }
-        });
-        jMouseMenu.add(contextPlay);
-
-        contextPause.setIcon(new javax.swing.ImageIcon(getClass().getResource("/smaplayer/images/pause.png"))); // NOI18N
-        contextPause.setText("Пауза");
-        contextPause.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                contextPauseActionPerformed(evt);
-            }
-        });
-        jMouseMenu.add(contextPause);
-
-        contextStop.setIcon(new javax.swing.ImageIcon(getClass().getResource("/smaplayer/images/stop.png"))); // NOI18N
-        contextStop.setText("Стоп");
-        contextStop.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                contextStopActionPerformed(evt);
-            }
-        });
-        jMouseMenu.add(contextStop);
 
         setTitle("Playlist");
         setIconImage(new ImageIcon("src/smaplayer/images/mainIcon.png").getImage());
@@ -185,6 +155,10 @@ public class Playlist extends javax.swing.JFrame {
         setResizable(false);
 
         jPanel1.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
+
+        jPLContainer.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        jPLContainer.setMinimumSize(new java.awt.Dimension(260, 353));
+        jPLContainer.setPreferredSize(new java.awt.Dimension(260, 353));
 
         jPlayList.setModel(myListModel);
         jPlayList.setSelectedIndex(1);
@@ -212,6 +186,11 @@ public class Playlist extends javax.swing.JFrame {
 
         btnAddPlayList.setIcon(new javax.swing.ImageIcon(getClass().getResource("/smaplayer/images/openplaylist.png"))); // NOI18N
         btnAddPlayList.setToolTipText("Открыть плейлист");
+        btnAddPlayList.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnAddPlayListMouseClicked(evt);
+            }
+        });
 
         btnVK.setIcon(new javax.swing.ImageIcon(getClass().getResource("/smaplayer/images/vk.png"))); // NOI18N
         btnVK.setToolTipText("Vkontakte");
@@ -251,9 +230,8 @@ public class Playlist extends javax.swing.JFrame {
                 .addGroup(jMenuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnAddMp3)
                     .addComponent(btnAddPlayList, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(jMenuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(btnVK)
-                        .addComponent(btnOdnoklassniki)))
+                    .addComponent(btnVK)
+                    .addComponent(btnOdnoklassniki))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -262,12 +240,12 @@ public class Playlist extends javax.swing.JFrame {
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jMenuPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jPLContainer, javax.swing.GroupLayout.Alignment.TRAILING)
+            .addComponent(jPLContainer, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addComponent(jPLContainer, javax.swing.GroupLayout.DEFAULT_SIZE, 353, Short.MAX_VALUE)
+                .addComponent(jPLContainer, javax.swing.GroupLayout.PREFERRED_SIZE, 353, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jMenuPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -351,10 +329,8 @@ public class Playlist extends javax.swing.JFrame {
         if (evt.getButton() == MouseEvent.BUTTON1 && evt.getClickCount() == 2){
             int index = jPlayList.getSelectedIndex();
             if (index != -1){
-                Mp3 mp3 = (Mp3) myListModel.getElementAt(index);
-                
-                doing.setSongIndex(index);
-                
+                Mp3 mp3 = (Mp3) myListModel.getElementAt(index);                
+                 
                 doing.play(mp3.getSongPatch());  
                 doing.setVolume(doing.getVolume(), 200);
             }
@@ -366,10 +342,8 @@ public class Playlist extends javax.swing.JFrame {
                 int index = jPlayList.getSelectedIndex();
                 
                 if (index != -1){
-                    Mp3 mp3 = (Mp3) myListModel.getElementAt(index);
-                    
-                    doing.setSongIndex(index);
-                    
+                    Mp3 mp3 = (Mp3) myListModel.getElementAt(index);                    
+                   
                     doing.play(mp3.getSongPatch());
                     doing.setVolume(doing.getVolume(), 200);
                 }
@@ -427,32 +401,15 @@ public class Playlist extends javax.swing.JFrame {
         myListModel.clear();
     }//GEN-LAST:event_contextClearActionPerformed
 
-    private void contextPlayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_contextPlayActionPerformed
-        int index = jPlayList.getSelectedIndex();
-                
-                if (index != -1){
-                    Mp3 mp3 = (Mp3) myListModel.getElementAt(index);
-                    
-                    doing.setSongIndex(index);
-                    
-                    doing.play(mp3.getSongPatch());
-                    doing.setVolume(doing.getVolume(), 200);
-                }
-    }//GEN-LAST:event_contextPlayActionPerformed
-
-    private void contextPauseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_contextPauseActionPerformed
-        int index = jPlayList.getSelectedIndex();
+    private void btnAddPlayListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnAddPlayListMouseClicked
+        FileUtils.setFileFilter(jOpenFile, openPLS);        
+        int count = jOpenFile.showOpenDialog(this);
         
-        if (index != -1)
-            doing.pause();
-    }//GEN-LAST:event_contextPauseActionPerformed
-
-    private void contextStopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_contextStopActionPerformed
-       int index = jPlayList.getSelectedIndex();
-        
-        if (index != -1)
-            doing.stop();
-    }//GEN-LAST:event_contextStopActionPerformed
+        if (count == JFileChooser.APPROVE_OPTION){
+            File file = jOpenFile.getSelectedFile();            
+            setListModel((DefaultListModel) FileUtils.deserialize(file.getPath()));
+        }
+    }//GEN-LAST:event_btnAddPlayListMouseClicked
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAddMp3;
@@ -463,9 +420,6 @@ public class Playlist extends javax.swing.JFrame {
     private javax.swing.JMenuItem contextAddSong;
     private javax.swing.JMenuItem contextClear;
     private javax.swing.JMenuItem contextDeleteSong;
-    private javax.swing.JMenuItem contextPause;
-    private javax.swing.JMenuItem contextPlay;
-    private javax.swing.JMenuItem contextStop;
     private javax.swing.JPanel jMenuPanel;
     private javax.swing.JPopupMenu jMouseMenu;
     private javax.swing.JFileChooser jOpenFile;
@@ -473,7 +427,6 @@ public class Playlist extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JList<String> jPlayList;
-    private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JSeparator jSeparator2;
+    private javax.swing.JPopupMenu.Separator jSeparator2;
     // End of variables declaration//GEN-END:variables
 }

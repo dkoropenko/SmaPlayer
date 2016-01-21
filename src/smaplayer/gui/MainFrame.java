@@ -23,10 +23,12 @@ import javax.swing.UnsupportedLookAndFeelException;
 import javazoom.jlgui.basicplayer.BasicController;
 import javazoom.jlgui.basicplayer.BasicPlayerEvent;
 import javazoom.jlgui.basicplayer.BasicPlayerListener;
-import smaplayer.FileUtils;
-import smaplayer.Mp3;
-import smaplayer.PlayerFileFilter;
+import fileClasses.FileUtils;
+import fileClasses.Mp3;
+import fileClasses.PlayerFileFilter;
+import static jdk.nashorn.internal.objects.NativeArray.map;
 import smaplayer.SmaPlayer;
+import java.util.ArrayList;
 
 /**
  *
@@ -48,9 +50,12 @@ public class MainFrame extends javax.swing.JFrame implements BasicPlayerListener
     private long timeFromStart; //Прошло секунд с начала песни
     private int songSize; //Размер песни в байтах
     private double songPosition = 0.0; //Позиция ползунка
-    //Передвижение ползунка (вручную\автоматически
-    private boolean autoMove = false;
-    private boolean manualMove = false;
+    //Передвижение ползунка (вручную\автоматически)
+    private boolean autoMove = true;
+    //Проверка отпускания ползунка
+    private boolean check = false;
+    //Запись значений перемотки
+    private ArrayList<Double> revPosition = new ArrayList();
     
 
     /**
@@ -61,6 +66,7 @@ public class MainFrame extends javax.swing.JFrame implements BasicPlayerListener
         initComponents();
         this.playlist = playlist;        
         this.doing = player;
+        doing.setBasicPlayerListener(this);
         
         //передаем элементы интерфейса в плеер
         doing.setUIElements(lbSongName, btnPlay);        
@@ -70,23 +76,26 @@ public class MainFrame extends javax.swing.JFrame implements BasicPlayerListener
     
     @Override
     public void opened(Object o, Map map) {
-        //Определяем длину песни и ее размер в байтах
+        //Определяем длину песни и ее размер в байтах        
         songTime = (long) Math.round((((Long) map.get("duration")).longValue()) / 1000000);
-        songSize = (int) Math.round(((Integer) map.get("mp3.length.bytes")).intValue());
+        songSize = (int) Math.round(((Integer) map.get("mp3.length.bytes")).intValue());  
     }
     @Override
     public void progress(int bytesread, long l, byte[] bytes, Map map) {
        float progress = -1.0f;
        
-       if (bytesread > 0 && songTime > 0)
-           progress = bytesread * 1.0f / songSize * 1.0f;
+       if (bytesread > 0 && songTime > 0){
+           progress = (bytesread * 1.0f) / (songSize * 1.0f);
+       }
        
-       //Сколько секунд прошло
-       timeFromStart = (long) progress * songTime;
+       //Сколько секунд прошло       
+       timeFromStart = (long) (progress * songTime);
+       
+       lbSongTime.setText(doing.getTime(timeFromStart));
        
        if (songTime != 0){
-           if (manualMove == false){
-               slSong.setValue((int) Math.round(timeFromStart * 1000 / songTime));
+           if (autoMove){
+               slSong.setValue(((int) Math.round((timeFromStart * 100) / songTime)));
            }
        }
     }
@@ -95,9 +104,9 @@ public class MainFrame extends javax.swing.JFrame implements BasicPlayerListener
         int state = bpe.getCode();
         
         if (state == BasicPlayerEvent.PLAYING)
-            manualMove = false;
+            autoMove = true;
         else if (state == BasicPlayerEvent.SEEKING)
-            manualMove = true;
+            autoMove = false;
         else if (state == BasicPlayerEvent.EOM)
             nextSong();
     }
@@ -109,51 +118,36 @@ public class MainFrame extends javax.swing.JFrame implements BasicPlayerListener
     private void processSeek(double bytes){
         try {
             long skipBytes = (long) Math.round(((Integer) songSize).intValue() * bytes);
+            System.out.println("пропустить байт: "+ skipBytes);
             doing.jump(skipBytes);
         } catch (Exception e) {
             e.printStackTrace();
-            manualMove = false;
+            autoMove = true;
         }
     }
     
     private void nextSong(){
-        int sizeOfList = playlist.getListModel().getSize()-1;
-        playedSong = doing.getSongIndex();
-        
+        int sizeOfList = playlist.getListModel().getSize()-1;        
+        playedSong = playlist.getList().getSelectedIndex();
         if (playedSong < sizeOfList){
-            playedSong++;
-            doing.setSongIndex(playedSong);
-            
-            Mp3 mp3 = (Mp3) playlist.getListModel().getElementAt(playedSong);
+            playedSong++;            
             playlist.getList().setSelectedIndex(playedSong);
-            
-            doing.play(mp3.getSongPatch());
-            doing.setVolume(slVolume.getValue(), slVolume.getMaximum());
+            playSong();
         }
     }    
-    private void prevSong(){
-        playedSong = doing.getSongIndex();
-        
-        if (playedSong > 0){
-            
+    private void prevSong(){  
+        playedSong = playlist.getList().getSelectedIndex();
+        if (playedSong > 0){            
             playedSong--;
-            doing.setSongIndex(playedSong);
-            
-            Mp3 mp3 = (Mp3) playlist.getListModel().getElementAt(playedSong);
-            playlist.getList().setSelectedIndex(playedSong);
-            
-            doing.play(mp3.getSongPatch());
-            doing.setVolume(slVolume.getValue(), slVolume.getMaximum());
+            playlist.getList().setSelectedIndex(playedSong);            
+            playSong();
         }
     }
     private void playSong(){
         int selectedSong = playlist.getList().getSelectedIndex();
         if (selectedSong != -1){
             //Выводим название песни.
-            Mp3 mp3 = (Mp3) playlist.getListModel().getElementAt(selectedSong);
-            
-            //Записываем индекс играемой песни.
-            doing.setSongIndex(selectedSong);
+            Mp3 mp3 = (Mp3) playlist.getListModel().getElementAt(selectedSong);            
             
             //Начинаем проигрывание песни.
             doing.play(mp3.getSongPatch());
@@ -199,7 +193,7 @@ public class MainFrame extends javax.swing.JFrame implements BasicPlayerListener
         jOpenFileDialog.setMultiSelectionEnabled(true);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("SmaPlayer V: 0.1");
+        setTitle("SmaPlayer v. 0.2");
         setIconImage(new ImageIcon("src/smaplayer/images/mainIcon.png").getImage());
         setLocation(new java.awt.Point(500, 500));
         setMinimumSize(new java.awt.Dimension(350, 172));
@@ -209,8 +203,7 @@ public class MainFrame extends javax.swing.JFrame implements BasicPlayerListener
 
         pnlStatus.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-        slSong.setMaximum(50);
-        slSong.setPaintLabels(true);
+        slSong.setMinorTickSpacing(15);
         slSong.setToolTipText("");
         slSong.setValue(0);
         slSong.addChangeListener(new javax.swing.event.ChangeListener() {
@@ -219,9 +212,7 @@ public class MainFrame extends javax.swing.JFrame implements BasicPlayerListener
             }
         });
 
-        lbSongName.setText("Название песни");
-
-        lbSongTime.setText("Время песни в формате ММ:СС");
+        lbSongTime.setText("00:00:00");
 
         slPan.setMaximum(200);
         slPan.setMinorTickSpacing(10);
@@ -264,7 +255,7 @@ public class MainFrame extends javax.swing.JFrame implements BasicPlayerListener
                 .addGroup(pnlStatusLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(pnlStatusLayout.createSequentialGroup()
                         .addGap(6, 6, 6)
-                        .addComponent(lbSongName)
+                        .addComponent(lbSongName, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(lbSongTime))
                     .addGroup(pnlStatusLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -455,12 +446,17 @@ public class MainFrame extends javax.swing.JFrame implements BasicPlayerListener
 
     //Открываем окно плейлиста справа от основного плеера.
     private void OpenPlaylist(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OpenPlaylist
-        Point coordinates = this.getLocation();
-        double x = coordinates.getX();
-        double y = coordinates.getY();
-        
-        playlist.setLocation((int)x+400, (int)y);
-        playlist.setVisible(true);
+        if (playlist.isShowing()){
+            playlist.setVisible(false);
+        }
+        else{
+            Point coordinates = this.getLocation();
+            double x = coordinates.getX();
+            double y = coordinates.getY();
+
+            playlist.setLocation((int)x+400, (int)y);
+            playlist.setVisible(true);            
+        }        
     }//GEN-LAST:event_OpenPlaylist
     //Открытие файлов через меню.
     private void jMenuOpenFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuOpenFileActionPerformed
@@ -561,17 +557,20 @@ public class MainFrame extends javax.swing.JFrame implements BasicPlayerListener
     }//GEN-LAST:event_slVolumeStateChanged
     //Ползунок статуса дорожки.
     private void slSongStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_slSongStateChanged
-       if (slSong.getValueIsAdjusting() == false){
-           if (autoMove == true){
-               autoMove = false;
-               songPosition = slSong.getValue() * 1.0 / 1000;
-               processSeek(songPosition);
-           }
-           else{
-               autoMove = true;
-               manualMove = true;
-           }               
-       }
+        //Проверяем трогает ли пользователь ползунок    
+        if (slSong.getValueIsAdjusting() == false){            
+            //Проверяем был ли передвинут ползунок
+            if (check == true){
+                check = false;                
+                int index = revPosition.size() - 2; //Берем последнюю позицию ползунка.
+                processSeek(revPosition.get(index)); //Перематываем на эту позицию.
+                revPosition.clear();
+            }
+        }
+        else{
+            check = true;
+            revPosition.add(slSong.getValue() * 1.0 / 100); //Записываем позиции ползунка
+        }
     }//GEN-LAST:event_slSongStateChanged
     //Уровень "Лево|Право"
     private void slPanStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_slPanStateChanged
