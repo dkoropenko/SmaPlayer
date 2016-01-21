@@ -5,7 +5,6 @@
  */
 package vk;
 
-import org.apache.http.client.HttpClient;
 
 /**
  *
@@ -17,8 +16,9 @@ public class Authorization {
     private String URL;
     
     private int appID = 5235983;
+    private String permision = "audio";
     private String redirect_uri = "http://oauth.vk.com/blank.html";
-    private String display = "popup";
+    private String display = "page";
     private String responseType = "token";
     
     
@@ -27,17 +27,19 @@ public class Authorization {
         this.password = password;
     }   
     
-    public void getToken(){
-        //HttpClient vkClient = DefaultHttpClient();
-        URL = "https://oauth.vk.com/authorize?"
-                + "client_id="+ appID 
-                + "&redirect_uri="+ redirect_uri
-                + "&display="+ display
-                + "&response_type="+ responseType;
-                
+    public void getToken() {          
+            URL = "https://oauth.vk.com/authorize?"
+                    + "client_id="+ appID
+                    + "&scope="+ permision
+                    + "&redirect_uri="+ redirect_uri
+                    + "&display="+ display
+                    + "&response_type="+ responseType;
+            
+           
     }
     
     public static void main(String[] args) {
+        //Authorization test = new Authorization("nik", "hello");
     }
     
 }
